@@ -1,0 +1,15 @@
+name: consumer (uses @v1 like a user would)
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  v1:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: karlaCastro00/vibelocked-leakcheck-action@v1
+        with:
+          url: https://vibelocked.com/
