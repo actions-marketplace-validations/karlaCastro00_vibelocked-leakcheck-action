@@ -1,0 +1,46 @@
+name: test
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  finds-fake-secrets:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: node test/make-fixtures.js fixtures
+      - id: scan
+        uses: ./
+        with:
+          path: fixtures
+          fail-on: none
+      - name: Expect 4 high and 1 review finding
+        env:
+          HIGH: ${{ steps.scan.outputs.high }}
+          WARN: ${{ steps.scan.outputs.warn }}
+        run: |
+          echo "high=$HIGH warn=$WARN"
+          test "$HIGH" = "4" && test "$WARN" = "1"
+      - id: gate
+        uses: ./
+        continue-on-error: true
+        with:
+          path: fixtures
+      - name: Expect the default gate to fail
+        run: test "${{ steps.gate.outcome }}" = "failure"
+  clean-repo-passes:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./
+  live-url-passes:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./
+        with:
+          path: .github
+          url: https://vibelocked.com/

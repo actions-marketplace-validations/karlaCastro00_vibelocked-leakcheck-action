@@ -1,0 +1,33 @@
+name: VibeLocked LeakCheck Scan
+description: Free, read-only scan for leaked API keys, committed .env files and secrets in your repo, build output or live app. No account, no token, no upload.
+author: VibeLocked
+branding:
+  icon: shield
+  color: green
+inputs:
+  path:
+    description: Folder to scan, relative to the workspace. Use your build output (for example dist or .next/static) to check what ships to the browser.
+    required: false
+    default: '.'
+  url:
+    description: Optional public URL of your deployed app. The action fetches the page, up to 20 same-origin scripts and a few well-known file paths with read-only GET requests.
+    required: false
+    default: ''
+  fail-on:
+    description: "Fail the job on: high (default, likely real secrets), warn (also possible secrets), or none (report only)."
+    required: false
+    default: high
+  max-files:
+    description: Maximum number of files to read.
+    required: false
+    default: '5000'
+outputs:
+  high:
+    description: Number of high severity findings
+  warn:
+    description: Number of possible secrets to review
+  total:
+    description: Total findings (high + warn)
+runs:
+  using: node24
+  main: dist/index.js
