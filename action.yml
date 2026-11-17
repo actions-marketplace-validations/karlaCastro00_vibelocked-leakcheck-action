@@ -1,5 +1,5 @@
 name: VibeLocked LeakCheck Scan
-description: Free, read-only scan for leaked API keys, committed .env files and secrets in your repo, build output or live app. No account, no token, no upload.
+description: Free, read-only scan for leaked API keys and .env files in your repo, build output or live app. No account or token.
 author: VibeLocked
 branding:
   icon: shield
